@@ -9,6 +9,14 @@ Search and counts string pattern 'OIE' matches in the soup
 ```sh
 $ npm install
 $ composer install
+```
+set theses folders and subfolders to writeable mode:
+```sh
+/bootstrap
+/storage
+```
+run laravel local devevelopment server:
+```sh
 $ php artisan serve
 ```
 
