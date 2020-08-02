@@ -24,7 +24,7 @@ class CorRequest extends FormRequest
     public function rules()
     {
         return [
-            'data' => 'required|array',
+            'matrixes' => 'required|array',
             'pattern' => 'required',
         ];
     }
@@ -37,8 +37,8 @@ class CorRequest extends FormRequest
     public function messages()
     {
         return [
-            'pattern.required' => 'The Pattern is required',
-            'data.required' => 'Data is required',
+            'pattern.required' => 'The Pattern field is required',
+            'matrixes.required' => 'The Matrixes field is required',
         ];
     }
 }

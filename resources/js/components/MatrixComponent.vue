@@ -10,7 +10,7 @@
                 </b-row>
             </div>
             <div class="card-footer">
-                <b-button @click="removeMatrix(index)" class="float-right" variant="danger">Delete Matrix</b-button>
+                <b-button @click="removeMatrix(index)" class="float-right" variant="danger">Remove</b-button>
             </div>
         </div>
     </div>

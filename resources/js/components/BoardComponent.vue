@@ -24,8 +24,13 @@
                                     @click="check()" 
                                     variant="primary" 
                                     class="mr-4">Find</b-button>
-                                    {{output}}
                             </b-form>
+                        </div>
+                        <div class="col-md-12 mb-2" v-if="results.length>0">
+                            <label class="mr-sm-2" for="inline-form-custom-select-pref">El Pattern {{pattern}} appears:</label>
+                            <ul>
+                                <li v-for="(result, index) in results" :key="index">{{result}}</li>
+                            </ul>
                         </div>
                         <matrix-component 
                             :matrix="m" 
@@ -53,7 +58,7 @@ export default {
             rows: 0,
             max_cols: 11,
             max_rows: 8,
-            output: '',
+            results: [],
             midx: null,
             pattern: 'OIE',
             options: []
@@ -62,12 +67,17 @@ export default {
     watch: {
         matrix: function (matrix) {
             this.options = []
+            this.options.push({
+                text: 'All Matrixs',
+                value: 0
+            })
             for (let index = 0; index < matrix.length; index++) {
                 this.options.push({
                     text: 'Matrix ' + (index + 1),
                     value: index
                 })
             }
+            this.midx = 0;
         },
     },
     methods: {
@@ -93,17 +103,21 @@ export default {
             if(this.midx==null) {
                 return false;
             }
+            let matrixes = (this.midx == 0)
+                ? this.matrix
+                : this.matrix[this.midx]
+            
             try {
                 const response = await axios.post("/api/check", {
-                        data: this.matrix[this.midx],
-                        pattern: this.pattern
+                        pattern: this.pattern,
+                        matrixes: matrixes
                     }, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json"
                     }
                 }).then(response => {
-                    this.output = `The Pattern "${this.pattern}" appears ${response.data.count} times in Matrix ${this.midx + 1}`;
+                    this.results = response.data.results;
                 });
             } catch (error) {
                 console.log(error);

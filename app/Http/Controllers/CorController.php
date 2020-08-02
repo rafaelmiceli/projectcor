@@ -17,7 +17,7 @@ class CorController extends Controller
     /**
      * searching pattern 
      */
-    private $pattern = 'OIE';
+    private $pattern = null;
     
     /**
      * pattern string length
@@ -45,6 +45,11 @@ class CorController extends Controller
     private $matrix = [];
 
     /**
+     * All matrixes recieved from request
+     */
+    private $matrixes = [];
+
+    /**
      * endpoint
      * iterates over earch cell, generating words in all directions
      * and counts pattern matches
@@ -53,15 +58,33 @@ class CorController extends Controller
      */
     public function check(CorRequest $request)
     {
+        #get Inputs
         $this->input = $request->all();
-        $this->matrix = $this->input['data'];
-        $this->nrow = count($this->matrix);
-        $this->ncol = count($this->matrix[0]);
         $this->pattern = $this->input['pattern'];
         $this->pattern_length = strlen($this->pattern);
-        
+        $this->matrixes = $this->input['matrixes'];
+        #process
+        foreach($this->matrixes as $key => $matrix) {
+            $this->matrix = $matrix;
+            $this->nrow = count($this->matrix);
+            $this->ncol = count($this->matrix[0]);
+            $count = $this->count_matrix();
+            $results[] = sprintf("%d times in Matrix %d",
+                intdiv($count, 2), 
+                ($key+1));
+        }
+        #responses
+        return response()->json([
+            'results' => $results
+        ]);
+    }
+
+    /**
+     * counts pattern in one matrix
+     * @return int pattern matches quantity
+     */
+    private function count_matrix() {
         $count = 0;
-        $unique_words = [];
         for ($i=0; $i < $this->nrow; $i++) { 
             for ($j=0; $j < $this->ncol; $j++) {
                 $words = $this->get_words_from_point($i, $j);
@@ -69,13 +92,8 @@ class CorController extends Controller
                 $count  += $this->count_matches($count_values);
             }
         }
-        
-        return response()->json([
-            #divide by because each pattern is counted twice
-            'count' => $count / 2
-        ]);
+        return $count;
     }
-
     /**
      * counts pattern matches
      * @param array $array counted words array
