@@ -69,7 +69,7 @@ export default {
             this.options = []
             this.options.push({
                 text: 'All Matrixs',
-                value: 0
+                value: -1
             })
             for (let index = 0; index < matrix.length; index++) {
                 this.options.push({
@@ -77,7 +77,7 @@ export default {
                     value: index
                 })
             }
-            this.midx = 0;
+            this.midx = -1;
         },
     },
     methods: {
@@ -103,10 +103,10 @@ export default {
             if(this.midx==null) {
                 return false;
             }
-            let matrixes = (this.midx == 0)
+            this.results = []
+            let matrixes = (this.midx == -1)
                 ? this.matrix
-                : this.matrix[this.midx]
-            
+                : [this.matrix[this.midx]]
             try {
                 const response = await axios.post("/api/check", {
                         pattern: this.pattern,
