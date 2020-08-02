@@ -76,11 +76,13 @@ export default {
     },
     methods: {
         generate_matrix() {
-            let rows = []
-            let index = this.matrix.length
-            for (let i = 1; i < (this.max_rows+1); i++) {
+            let rows = [], index = this.matrix.length, 
+                nrows = this.generate_random(2, this.max_rows+1),
+                ncols = this.generate_random(2, this.max_cols+1)
+
+            for (let i = 1; i < nrows; i++) {
                 let cols = []
-                for (let j = 1; j < (this.max_cols+1); j++) {
+                for (let j = 1; j < ncols; j++) {
                     cols.push(this.generate_letter(true));
                 }
                 rows.push(cols);
