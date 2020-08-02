@@ -4,25 +4,41 @@
             <div class="col-md-12">
                 <div class="card card-default">
                     <div class="card-header">
-                        <span>Alphabet Soups</span>
-                        <b-button @click="generate_matrix" class="float-right" variant="success">Agregar Matriz</b-button>
+                        <span>Search Pattern in an Alphabet Soups</span>
+                        <b-button @click="generate_matrix" class="float-right" variant="success">Generate Matrix</b-button>
                     </div>
                     <div class="card-body">
-                        <div class="col-md-6 mb-2" v-if="matrix.length>0">
+                        <div class="col-md-12 mb-2" v-if="matrix.length>0">
                             <b-form inline>
+                                <label class="mr-sm-2" for="inline-form-custom-select-pref">Pattern:</label>
+                                <b-form-input 
+                                    class="mb-2 mr-sm-2 mb-sm-0"
+                                    v-model="pattern"
+                                ></b-form-input>
+                                <label class="mr-sm-2" for="inline-form-custom-select-pref">Matrix:</label>
                                 <b-form-select
-                                id="inline-form-custom-select-pref"
-                                class="mb-2 mr-sm-2 mb-sm-0"
-                                :options="options"
-                                :value="null"
-                                v-model="midx"
-                                ></b-form-select>
-                                <b-button  type="button" @click="check()" variant="primary" class="mr-4">Check for "OIE"</b-button>
-                                {{output}}
+                                    id="inline-form-custom-select-pref"
+                                    class="mb-2 mr-sm-2 mb-sm-0"
+                                    :options="options"
+                                    :value="null"
+                                    v-model="midx"
+                                    ></b-form-select>
+                                <b-button  
+                                    type="button" 
+                                    @click="check()" 
+                                    variant="primary" 
+                                    class="mr-4">Find</b-button>
+                                    {{output}}
                             </b-form>
                         </div>
-                        <matrix-component :matrix="m" :num="idx + 1" v-for="(m,idx) in matrix" :key="idx"></matrix-component>
-                    </div>  
+                        <matrix-component 
+                            :matrix="m" 
+                            :index="idx" 
+                            v-for="(m,idx) in matrix" 
+                            :key="idx"
+                            v-on:remove-matrix="onRemoveMatrix"
+                            ></matrix-component>
+                    </div>
                 </div>
             </div>
         </div>
@@ -43,15 +59,20 @@ export default {
             max_rows: 8,
             output: '',
             midx: null,
-            options: [{
-                text: 'Select a Matrix ',
-                value: null
-            }]
+            pattern: 'OIE',
+            options: []
         };
     },
-    mounted() {
-        
-        console.log('Component mounted.')
+    watch: {
+        matrix: function (matrix) {
+            this.options = []
+            for (let index = 0; index < matrix.length; index++) {
+                this.options.push({
+                    text: 'Matrix ' + (index + 1),
+                    value: index
+                })
+            }
+        },
     },
     methods: {
         generate_matrix() {
@@ -60,16 +81,15 @@ export default {
             for (let i = 1; i < (this.max_rows+1); i++) {
                 let cols = []
                 for (let j = 1; j < (this.max_cols+1); j++) {
-                    cols.push(this.generate_random_vocals());
+                    cols.push(this.generate_letter(true));
                 }
                 rows.push(cols);
                 cols.slice()
             }
             this.matrix.push(rows);
-            this.options.push({
-                text: 'Matrix ' + this.matrix.length,
-                value: index
-            })
+        },
+        onRemoveMatrix(index) {
+            this.matrix.splice(index, 1)
         },
         async check() {
             if(this.midx==null) {
@@ -77,31 +97,36 @@ export default {
             }
             try {
                 const response = await axios.post("/check", {
-                        data: this.matrix[this.midx]
+                        data: this.matrix[this.midx],
+                        pattern: this.pattern,
                     }, {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json"
                     }
                 }).then(response => {
-                    this.output = `OIE Pattern count: ${response.data.count} `;
+                    this.output = `The Pattern "${this.pattern}" appears ${response.data.count} times in Matrix ${this.midx + 1}`;
                 });
             } catch (error) {
                 console.log(error);
             }
         },
-        generate_random_vocals() {
-            let min = 0
-            let max
-            let aux = [79,73,69,85,65] //force vocals filling
-
+        generate_letter(forceVocals = false) {
+            let max = null, min = null, aux = [], random = null, charCode = null
+            if(forceVocals) {
+                aux = [79,73,69,85,65] //force vocals
                 max = aux.length
-            let random = Math.floor(Math.random() * (max - min) ) + min;
-            return String.fromCharCode(aux[random]);
+                random = this.generate_random(min,max);
+                charCode = aux[random];
+            } else {
+                min = 90;
+                max = 65;
+                charCode = this.generate_random(min,max);
+            }
+            return String.fromCharCode(charCode);
         },
-        generate_random(min=65, max=90) {
-            let random = Math.floor(Math.random() * (max - min) ) + min;
-            return String.fromCharCode(random);
+        generate_random(min,max) {
+            return Math.floor(Math.random() * (max - min) ) + min;
         }
     }
 }

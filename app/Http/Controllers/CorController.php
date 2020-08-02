@@ -56,9 +56,11 @@ class CorController extends Controller
         $this->matrix = $this->input['data'];
         $this->nrow = count($this->matrix);
         $this->ncol = count($this->matrix[0]);
+        $this->pattern = $this->input['pattern'];
         $this->pattern_length = strlen($this->pattern);
         
         $count = 0;
+        $unique_words = [];
         for ($i=0; $i < $this->nrow; $i++) { 
             for ($j=0; $j < $this->ncol; $j++) {
                 $words = $this->get_words_from_point($i, $j);
@@ -68,7 +70,8 @@ class CorController extends Controller
         }
         
         return response()->json([
-            'count' => $count
+            #divide by because each pattern is counted twice
+            'count' => $count / 2
         ]);
     }
 

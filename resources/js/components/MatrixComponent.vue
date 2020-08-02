@@ -1,13 +1,16 @@
 <template>
     <div class="float-left col-md-6  mb-2">
         <div class="card">
-            <h5 class="card-header">Matrix {{num}}</h5>
+            <h5 class="card-header">Matrix {{index+1}}</h5>
             <div class="card-body">
                 <b-row v-for="(a1, i1) in matrix" :key="i1">
                     <b-col cols="1" v-for="(a2, i2) in a1" :key="i2">
                         <cell-component :letter="a3" v-for="(a3, i3) in a2" :key="i3"></cell-component>
                     </b-col>
                 </b-row>
+            </div>
+            <div class="card-footer">
+                <b-button @click="removeMatrix(index)" class="float-right" variant="danger">Delete Matrix</b-button>
             </div>
         </div>
     </div>
@@ -17,19 +20,15 @@
 import axios from "axios";
 
 export default {
-    props: ['num','matrix'],
+    props: ['index','matrix'],
     data() {
         return {
-
         };
     },
-    computed: {
-        get_header() {
-            this.header = "Matriz " + this.num
-        }
-    },
     methods: {
-        
+        removeMatrix(index) {
+            this.$emit('remove-matrix', index)
+        }
     }
 }
 </script>
