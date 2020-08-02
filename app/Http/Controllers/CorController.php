@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Http\Requests\CorRequest;
 
 class CorController extends Controller
 {
@@ -41,7 +42,7 @@ class CorController extends Controller
     /**
      * matrix from input data
      */
-    private $matrix;
+    private $matrix = [];
 
     /**
      * endpoint
@@ -50,7 +51,7 @@ class CorController extends Controller
      * @param Request $request
      * @return json
      */
-    public function check(Request $request)
+    public function check(CorRequest $request)
     {
         $this->input = $request->all();
         $this->matrix = $this->input['data'];

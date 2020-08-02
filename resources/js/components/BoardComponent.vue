@@ -94,7 +94,7 @@ export default {
                 return false;
             }
             try {
-                const response = await axios.post("/check", {
+                const response = await axios.post("/api/check", {
                         data: this.matrix[this.midx],
                         pattern: this.pattern
                     }, {
