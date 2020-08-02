@@ -10,11 +10,7 @@
                     <div class="card-body">
                         <div class="col-md-12 mb-2" v-if="matrix.length>0">
                             <b-form inline>
-                                <label class="mr-sm-2" for="inline-form-custom-select-pref">Pattern:</label>
-                                <b-form-input 
-                                    class="mb-2 mr-sm-2 mb-sm-0"
-                                    v-model="pattern"
-                                ></b-form-input>
+                                <label class="mr-sm-2" for="inline-form-custom-select-pref">Pattern {{pattern}}:</label>
                                 <label class="mr-sm-2" for="inline-form-custom-select-pref">Matrix:</label>
                                 <b-form-select
                                     id="inline-form-custom-select-pref"
@@ -100,7 +96,7 @@ export default {
             try {
                 const response = await axios.post("/check", {
                         data: this.matrix[this.midx],
-                        pattern: this.pattern,
+                        pattern: this.pattern
                     }, {
                     headers: {
                         Accept: "application/json",
