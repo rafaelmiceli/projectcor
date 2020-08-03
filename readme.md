@@ -2,7 +2,7 @@
 
 ## Introduction
 Alphabetic Soup with laravel-vuejs.
-This basic application is intended to search and counts string pattern 'OIE' matches in each matrix (alfabethic soup)
+This basic application is intended to search and counts the string pattern 'OIE' matches in each matrix (alfabethic soup)
 
 ### Installation
 
