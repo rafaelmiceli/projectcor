@@ -32,13 +32,15 @@
                                 <li v-for="(result, index) in results" :key="index">{{result}}</li>
                             </ul>
                         </div>
-                        <matrix-component 
-                            :matrix="m" 
-                            :index="idx" 
-                            v-for="(m,idx) in matrix" 
-                            :key="idx"
-                            v-on:remove-matrix="onRemoveMatrix"
-                            ></matrix-component>
+                        <transition name="fade">
+                            <matrix-component 
+                                :matrix="m" 
+                                :index="idx" 
+                                v-for="(m,idx) in matrix" 
+                                :key="idx"
+                                v-on:remove-matrix="onRemoveMatrix"
+                                ></matrix-component>
+                        </transition>
                     </div>
                 </div>
             </div>
@@ -56,8 +58,10 @@ export default {
             matrix: [],
             cols: 0,
             rows: 0,
-            max_cols: 11,
+            max_cols: 8,
             max_rows: 8,
+            min_cols: 3,
+            min_rows: 3,
             results: [],
             midx: null,
             pattern: 'OIE',
@@ -83,8 +87,8 @@ export default {
     methods: {
         generate_matrix() {
             let rows = [], index = this.matrix.length, 
-                nrows = this.generate_random(2, this.max_rows+1),
-                ncols = this.generate_random(2, this.max_cols+1)
+                nrows = this.generate_random(this.min_rows, this.max_rows+1),
+                ncols = this.generate_random(this.min_cols, this.max_cols+1)
 
             for (let i = 1; i < nrows; i++) {
                 let cols = []
@@ -98,6 +102,7 @@ export default {
         },
         onRemoveMatrix(index) {
             this.matrix.splice(index, 1)
+            this.results = []
         },
         async check() {
             if(this.midx==null) {
