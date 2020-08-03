@@ -32,15 +32,13 @@
                                 <li v-for="(result, index) in results" :key="index">{{result}}</li>
                             </ul>
                         </div>
-                        <transition name="fade">
-                            <matrix-component 
-                                :matrix="m" 
-                                :index="idx" 
-                                v-for="(m,idx) in matrix" 
-                                :key="idx"
-                                v-on:remove-matrix="onRemoveMatrix"
-                                ></matrix-component>
-                        </transition>
+                        <matrix-component 
+                            :matrix="m" 
+                            :index="idx" 
+                            v-for="(m,idx) in matrix" 
+                            :key="idx"
+                            v-on:remove-matrix="onRemoveMatrix"
+                            ></matrix-component>
                     </div>
                 </div>
             </div>
