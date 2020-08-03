@@ -10,7 +10,7 @@ Search and counts string pattern 'OIE' matches in the soup
 $ npm install
 $ composer install
 ```
-set theses folders and subfolders to writeable mode:
+set following folders and subfolders to writeable mode:
 ```sh
 /bootstrap
 /storage
