@@ -1,4 +1,4 @@
-# ALFABETHIC SOUP
+# Letters Soup
 
 ## Introduction
 Alphabetic Soup with laravel-vuejs.
